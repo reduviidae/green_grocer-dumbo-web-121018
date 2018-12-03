@@ -22,21 +22,7 @@ def consolidate_cart(cart)
   # binding.pry
 end
 
-# earlier solution for reference
-=begin
-    i = 0
-    while i < coupons.length
-      if coupons[i][:item] == item
-        # binding.pry
-        info[:count] = (info[:count] - coupons[i][:num])
-        cart = cart.merge({"#{coupons[i][:item]} W/COUPON" => {
-          :price => coupons[i][:cost], 
-          :clearance => cart[coupons[i][:item]][:clearance], 
-          :count =>coupons[i][:num]}})
-      end
-      i += 1
-    end
-=end
+# if there is more than one, then increment the count. 
 
 
 def apply_coupons(cart, coupons)
@@ -47,12 +33,12 @@ def apply_coupons(cart, coupons)
     coupons.each do |coupon|
       # binding.pry
       if coupon[:item] == item
+        binding.pry
         cart = cart.merge({"#{item} W/COUPON" => {
           :price => coupon[:cost], 
           :clearance => info[:clearance], 
           :count => 1}})
       end
-      info[:count] = (coupon[:num] - info[:count])
       # binding.pry
     end
   end

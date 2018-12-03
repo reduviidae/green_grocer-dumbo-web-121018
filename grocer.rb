@@ -22,12 +22,7 @@ def consolidate_cart(cart)
   # binding.pry
 end
 
-def apply_coupons(cart, coupons)
-  # binding.pry
-  discount_cart = {}
-  cart.each do |item, info|
-    # binding.pry
-
+# earlier solution for reference
 =begin
     i = 0
     while i < coupons.length
@@ -42,6 +37,13 @@ def apply_coupons(cart, coupons)
       i += 1
     end
 =end
+
+
+def apply_coupons(cart, coupons)
+  # binding.pry
+  discount_cart = {}
+  cart.each do |item, info|
+    # binding.pry
     coupons.each do |coupon|
       # binding.pry
       if coupon[:item] == item

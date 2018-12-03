@@ -50,9 +50,10 @@ def apply_coupons(cart, coupons)
         cart = cart.merge({"#{item} W/COUPON" => {
           :price => coupon[:cost], 
           :clearance => info[:clearance], 
-          :count => coupon[:num]}})
-        info[:count] = (info[:count] - coupon[:num])
+          :count => 1}})
       end
+      info[:count] = (coupon[:num] - info[:count])
+      # binding.pry
     end
   end
   # binding.pry

@@ -1,15 +1,67 @@
+require "pry"
+
 def consolidate_cart(cart)
-  # code here
+  temp_item = ""
+  new_cart = {}
+  cart.each do |grocery_item|
+    grocery_item.each do |food, about|
+      # binding.pry
+      about = about.merge({:count => 1})
+      if food == temp_item
+        about[:count] = about[:count] + 1
+      end
+      new_cart = new_cart.merge({food => about})
+      temp_item = food
+      # binding.pry
+    end
+    # binding.pry
+  end
+  new_cart
+  # binding.pry
 end
 
 def apply_coupons(cart, coupons)
-  # code here
+  # binding.pry
+  discount_cart = {}
+  cart.each do |item, info|
+    # binding.pry
+    i = 0
+    while i < coupons.length
+      if coupons[i][:item] == item
+        # binding.pry
+        info[:count] = (info[:count] - coupons[i][:num])
+        cart = cart.merge({"#{coupons[i][:item]} W/COUPON" => {
+          :price => coupons[i][:cost], 
+          :clearance => cart[coupons[i][:item]][:clearance], 
+          :count =>coupons[i][:num]}})
+      end
+      i += 1
+    end
+  end
+  cart
 end
 
 def apply_clearance(cart)
-  # code here
+  # binding.pry
+  cart.each do |item, info|
+    # binding.pry
+    if cart[item][:clearance] == true
+      cart[item][:price] = (cart[item][:price] * 0.8).round(2)
+    end
+  end
+  cart
 end
 
 def checkout(cart, coupons)
-  # code here
+  # binding.pry
+  consolidate_cart(cart)
+  apply_coupons(cart, coupons)
+  apply_clearance(cart)
+  total_price = 0
+  cart.each do |item, info|
+      total_price += info[:price]
+  end
+  if total_price >= 100
+    total_price = (total_price * 0.9).round(2)
+  end
 end

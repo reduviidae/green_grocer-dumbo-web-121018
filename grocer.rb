@@ -22,21 +22,7 @@ def consolidate_cart(cart)
   # binding.pry
 end
 
-# earlier solution for reference
-=begin
-    i = 0
-    while i < coupons.length
-      if coupons[i][:item] == item
-        # binding.pry
-        info[:count] = (info[:count] - coupons[i][:num])
-        cart = cart.merge({"#{coupons[i][:item]} W/COUPON" => {
-          :price => coupons[i][:cost], 
-          :clearance => cart[coupons[i][:item]][:clearance], 
-          :count =>coupons[i][:num]}})
-      end
-      i += 1
-    end
-=end
+# if there is more than one, then increment the count. 
 
 
 def apply_coupons(cart, coupons)
@@ -46,17 +32,26 @@ def apply_coupons(cart, coupons)
     # binding.pry
     coupons.each do |coupon|
       # binding.pry
-      if coupon[:item] == item
-        cart = cart.merge({"#{item} W/COUPON" => {
+      unless cart[item][:count] < coupon[:num]
+        if coupon[:item] == item && cart.include?("#{item} W/COUPON")
+          cart["#{item} W/COUPON"][:count] += 1 
+          cart[item][:count] = (cart[item][:count] - coupon[:num])
+        elsif coupon[:item] == item 
+          cart = cart.merge({"#{item} W/COUPON" => {
           :price => coupon[:cost], 
           :clearance => info[:clearance], 
           :count => 1}})
-      end
-      info[:count] = (coupon[:num] - info[:count])
+          cart[item][:count] = (cart[item][:count] - coupon[:num])
+          # binding.pry
+        else coupon[:item] != item 
+          break
+        end
       # binding.pry
+      end
     end
+    # binding.pry
   end
-  # binding.pry
+  binding.pry
   cart
 end
 
@@ -78,7 +73,7 @@ def checkout(cart, coupons)
   apply_clearance(cart)
   total_price = 0
   cart.each do |item, info|
-      total_price += info[:price]
+      total_price += (info[:price] * info[:count])
   end
   if total_price >= 100
     total_price = (total_price * 0.9).round(2)

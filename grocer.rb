@@ -32,26 +32,27 @@ def apply_coupons(cart, coupons)
     # binding.pry
     coupons.each do |coupon|
       # binding.pry
-      unless cart[item][:count] < coupon[:num]
+      # unless cart[item][:count] < coupon[:num]
         if coupon[:item] == item && cart.include?("#{item} W/COUPON")
           cart["#{item} W/COUPON"][:count] += 1 
-          cart[item][:count] = (cart[item][:count] - coupon[:num])
         elsif coupon[:item] == item 
           cart = cart.merge({"#{item} W/COUPON" => {
           :price => coupon[:cost], 
           :clearance => info[:clearance], 
           :count => 1}})
-          cart[item][:count] = (cart[item][:count] - coupon[:num])
           # binding.pry
         else coupon[:item] != item 
           break
         end
       # binding.pry
-      end
+      # end
+        if cart[item][:count] >= coupon[:num]
+          cart[item][:count] = (cart[item][:count] - coupon[:num])
+        end
     end
     # binding.pry
   end
-  binding.pry
+  # binding.pry
   cart
 end
 

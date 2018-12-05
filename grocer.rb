@@ -3,17 +3,17 @@ require "pry"
 def consolidate_cart(cart)
   consolidated_cart = {}
   cart.each do |item| 
-    item.each do |food, info|
-       if consolidated_cart[food]
-          consolidated_cart[food][:count] += 1
+    item.each do |food, info|     
+      if consolidated_cart[food]
+      consolidated_cart[food][:count] += 1
       else 
          consolidated_cart[food] = info 
           consolidated_cart[food][:count] = 1 
+      end
     end
   end
-end
-consolidated_cart
-end
+cart = consolidated_cart
+
 
 #  # binding.pry
 #  temp_item = ""

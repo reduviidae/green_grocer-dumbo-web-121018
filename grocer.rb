@@ -1,58 +1,57 @@
 require "pry"
 
 def consolidate_cart(cart)
-  # binding.pry
-  temp_item = ""
-  new_cart = {}
-  cart.each do |grocery_item|
-    grocery_item.each do |food, about|
-      # binding.pry
-      about = about.merge({:count => 1})
-      if food == temp_item
-        about[:count] = about[:count] + 1
-      end
-      new_cart = new_cart.merge({food => about})
-      temp_item = food
-      # binding.pry
+  consolidated_cart = {}
+  cart.each do |item| 
+    item.each do |food, info|
+       if consolidated_cart[food]
+          consolidated_cart[food][:count] += 1
+      else 
+         consolidated_cart[food] = info 
+          consolidated_cart[food][:count] = 1 
     end
-    # binding.pry
   end
-  cart = new_cart
-  cart
-  # binding.pry
+end
+consolidated_cart
+end
+
+#  # binding.pry
+#  temp_item = ""
+#  new_cart = {}
+#  cart.each do |grocery_item|
+#    grocery_item.each do |food, about|
+#      # binding.pry
+#      about = about.merge({:count => 1})
+#      if food == temp_item
+#        about[:count] = about[:count] + 1
+#      end
+#      new_cart = new_cart.merge({food => about})
+#      temp_item = food
+#      # binding.pry
+#    end
+#    # binding.pry
+#  end
+#  cart = new_cart
+#  cart
+#  # binding.pry
 end
 
 # if there is more than one, then increment the count. 
 
 
 def apply_coupons(cart, coupons)
-  # binding.pry
-  discount_cart = {}
-  cart.each do |item, info|
-    # binding.pry
-    coupons.each do |coupon|
-      # binding.pry
-      unless cart[item][:count] < coupon[:num]
-        if coupon[:item] == item && cart.include?("#{item} W/COUPON")
-          cart["#{item} W/COUPON"][:count] += 1 
-          cart[item][:count] = (cart[item][:count] - coupon[:num])
-        elsif coupon[:item] == item 
-          cart = cart.merge({"#{item} W/COUPON" => {
-          :price => coupon[:cost], 
-          :clearance => info[:clearance], 
-          :count => 1}})
-          cart[item][:count] = (cart[item][:count] - coupon[:num])
-          # binding.pry
-        else coupon[:item] != item 
-          break
-        end
-      # binding.pry
-      end
-    end
-    # binding.pry
+coupons.each do |coupon|
+  name = coupon[:item]
+  if cart[name] && coupon[:num] <= cart[name][:count]
+    if cart["#{name} W/COUPON"]
+      cart["#{name} W/COUPON"][:count] += 1
+    else       
+      cart["#{name} W/COUPON"] = {count: 1, price: coupon[:cost], clearance: cart[name][:clearance]}    
+    end    
+    cart[name][:count] -= coupon[:num]
   end
-  binding.pry
-  cart
+end
+cart
 end
 
 def apply_clearance(cart)
@@ -62,8 +61,8 @@ def apply_clearance(cart)
     if cart[item][:clearance] == true
       cart[item][:price] = (cart[item][:price] * 0.8).round(2)
     end
-  end
   cart
+  end
 end
 
 def checkout(cart, coupons)
